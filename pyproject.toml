@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "telegram_parsing"
+version = "0.1.0"
+description = "A script for parsing telegram channels & groups"
+authors = ["mbalashovv <isdedtool@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+telethon = "^1.39.0"
+yoyo-migrations = "^9.0.0"
+asyncpg = "^0.30.0"
+pydantic = "^2.10.6"
+python-dotenv = "^1.0.1"
+pydantic-settings = "^2.8.1"
+psycopg2-binary = "^2.9.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

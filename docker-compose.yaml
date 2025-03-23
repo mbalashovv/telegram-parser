@@ -1,0 +1,62 @@
+version: '3.8'
+services:
+  app:
+    container_name: telegram_parser
+    build:
+      context: .
+      dockerfile: docker/python/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES__HOST: postgres # name of docker-compose service
+    depends_on:
+      - postgres-migrations
+    volumes:
+      - ${SESSION_PATH_EXTERNAL}:${TELEGRAM__SESSION_PATH}
+    command: [
+      "poetry", "run", "python", "-m", "app"
+    ]
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: telegram_parser-db
+    env_file:
+      - .env
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/telegram_db:rw
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES__PASSWORD}
+      POSTGRES_USER: ${POSTGRES__USER}
+      POSTGRES_DB: ${POSTGRES__DATABASE_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRESQL__USER} -d $${POSTGRESQL__DATABASE_NAME}" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+  postgres-migrations:
+    container_name: telegram_parser-migrations
+    build:
+      context: .
+      dockerfile: docker/python/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      POSTGRES__HOST: postgres # name of docker-compose service
+    restart: on-failure
+    command: [
+      "poetry", "run", "python", "-m", "scripts.migrate"
+    ]
+
+
+volumes:
+  postgres_data: {}
