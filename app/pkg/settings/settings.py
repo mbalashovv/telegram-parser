@@ -65,8 +65,10 @@ class Telegram(_Settings):
     API_HASH: str
     #: List[int]: Telegram sources (channels/groups) to parse.
     SOURCES_TO_PARSE: List[int]
-    #: str: Name of a telegram session.
+    #: str: Path of a telegram session.
     SESSION_PATH: Path
+    #: str: Path of a telegram session on your local machine.
+    SESSION_PATH_EXTERNAL: Path
 
 
 class Logger(_Settings):

@@ -13,7 +13,7 @@ services:
     depends_on:
       - postgres-migrations
     volumes:
-      - ${SESSION_PATH_EXTERNAL}:${TELEGRAM__SESSION_PATH}
+      - ${TELEGRAM__SESSION_PATH_EXTERNAL}:${TELEGRAM__SESSION_PATH}
     command: [
       "poetry", "run", "python", "-m", "app"
     ]
